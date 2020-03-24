@@ -1,20 +1,17 @@
 <template>
-  <div id="app">
-
+  <div>
+    首页
 
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-
-export default {
-  name: 'app',
-  components: {
+  export default {
+    name: 'layout'
   }
-}
 </script>
 
-<style>
+<style scoped>
 
 </style>
