@@ -33,36 +33,29 @@
         <!--侧边布局-->
         <el-aside width="200px">
           <el-menu
-            default-active="2"
+            default-active="0"
             @select="slideSelect">
-            <el-menu-item index="1">
-              <i class="el-icon-menu"></i>
-              <span slot="title">导航</span>
-            </el-menu-item>
-            <el-menu-item index="2">
-              <i class="el-icon-document"></i>
-              <span slot="title">导航三</span>
-            </el-menu-item>
-            <el-menu-item index="3">
-              <i class="el-icon-setting"></i>
-              <span slot="title">导航四</span>
+            <el-menu-item :index="index|numToString" v-for="(item,index) in slideMenus" :key="index">
+              <i :class="item.icon"></i>
+              <span slot="title">{{item.name}}</span>
             </el-menu-item>
 
           </el-menu>
         </el-aside>
-        <!--        主布局-->
+        <!--主布局-->
         <el-main>
           <li v-for="i in 100" :key="i">{{i}}</li>
         </el-main>
       </el-container>
     </el-container>
 
-    <!--    <router-view></router-view>-->
+    <!--<router-view></router-view>-->
   </div>
 </template>
 
 <script>
   import common from '../common/mixins/common.js'
+
   export default {
     mixins: [common],
     name: 'layout',
@@ -71,21 +64,104 @@
         navBar: {
           active: '0',
           list: [
-            {name: '首页'},
-            {name: '商品'},
-            {name: '订单'},
-            {name: '会员'},
-            {name: '设置'}
+            {
+              name: '首页',
+              subActive: '0',
+              submenu: [
+                {
+                  icon: 'el-icon-s-home',
+                  name: '后台首页'
+                },
+                {
+                  icon: 'el-icon-s-order',
+                  name: '商品列表'
+                }
+              ]
+            },
+            {
+              name: '商品',
+              subActive: '0',
+              submenu: [
+                {
+                  icon: 'el-icon-s-home',
+                  name: '后台首页2'
+                },
+                {
+                  icon: 'el-icon-s-order',
+                  name: '商品列表2'
+                }
+              ]
+            },
+            {
+              name: '订单',
+              subActive: '0',
+              submenu: [
+                {
+                  icon: 'el-icon-s-home',
+                  name: '后台首页3'
+                },
+                {
+                  icon: 'el-icon-s-order',
+                  name: '商品列表3'
+                }
+              ]
+            },
+            {
+              name: '会员',
+              subActive: '0',
+              submenu: [
+                {
+                  icon: 'el-icon-s-home',
+                  name: '后台首页4'
+                },
+                {
+                  icon: 'el-icon-s-order',
+                  name: '商品列表4'
+                }
+              ]
+            },
+            {
+              name: '设置',
+              subActive: '0',
+              submenu: [
+                {
+                  icon: 'el-icon-s-home',
+                  name: '后台首页'
+                },
+                {
+                  icon: 'el-icon-s-order',
+                  name: '商品列表'
+                }
+              ]
+            }
           ]
         }
+      }
+    },
+    computed: {
+      // slideMenusActive(){
+      //   return this.navBar.list[this.navBar.active].subActive
+      // },
+      slideMenusActive: {
+        get() {
+          return this.navBar.list[this.navBar.active].subActive
+        },
+        set(val) {
+          this.navBar.list[this.navBar.active].subActive = val;
+        }
+      },
+      slideMenus () {
+        return this.navBar.list[this.navBar.active].submenu
       }
     },
     methods: {
       handleSelect (key, keyPath) {
         console.log(key, keyPath)
+        this.navBar.active = key
       },
       slideSelect (key, keyPath) {
         console.log(key, keyPath)
+        this.slideMenusActive = key
       }
     }
 
