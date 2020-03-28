@@ -7,7 +7,10 @@
           <div class="card mt-5">
             <!--bootstrap4的头部-->
             <div class="card-header bg-white">
-              <h3 class="text-center mb-0">UNI-ADMIN</h3>
+              <!--这是原来的写法，直接写的-->
+              <!--<h3 class="text-center mb-0">UNI-ADMIN</h3>-->
+              <!--这是在common/config/-config.js中配置的。同时在main.js中配置了全局配置文件$conf-->
+              <h3 class="text-center mb-0">{{$conf.logo}}</h3>
             </div>
             <!--这里使用bootstrap4的card-body-->
             <div class="card-body">

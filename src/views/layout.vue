@@ -4,7 +4,7 @@
       <!--头部导航栏，这里和复制的有眼色差别，给一个背景色相同的就可以了-->
       <el-header class="d-flex align-items-center" style="background:#545c64">
         <!--顶部导航栏，直接复制的-->
-        <a class="h5 text-light mb-0 mr-auto">UNI-ADMIN</a>
+        <a class="h5 text-light mb-0 mr-auto">{{$conf.logo}}</a>
         <!--激活时的线-->
         <div class="line"></div>
         <el-menu
@@ -33,7 +33,7 @@
         <!--侧边布局-->
         <el-aside width="200px">
           <el-menu
-            default-active="0"
+            :default-active="slideMenusActive"
             @select="slideSelect">
             <el-menu-item :index="index|numToString" v-for="(item,index) in slideMenus" :key="index">
               <i :class="item.icon"></i>
@@ -61,96 +61,30 @@
     name: 'layout',
     data () {
       return {
-        navBar: {
-          active: '0',
-          list: [
-            {
-              name: '首页',
-              subActive: '0',
-              submenu: [
-                {
-                  icon: 'el-icon-s-home',
-                  name: '后台首页'
-                },
-                {
-                  icon: 'el-icon-s-order',
-                  name: '商品列表'
-                }
-              ]
-            },
-            {
-              name: '商品',
-              subActive: '0',
-              submenu: [
-                {
-                  icon: 'el-icon-s-home',
-                  name: '后台首页2'
-                },
-                {
-                  icon: 'el-icon-s-order',
-                  name: '商品列表2'
-                }
-              ]
-            },
-            {
-              name: '订单',
-              subActive: '0',
-              submenu: [
-                {
-                  icon: 'el-icon-s-home',
-                  name: '后台首页3'
-                },
-                {
-                  icon: 'el-icon-s-order',
-                  name: '商品列表3'
-                }
-              ]
-            },
-            {
-              name: '会员',
-              subActive: '0',
-              submenu: [
-                {
-                  icon: 'el-icon-s-home',
-                  name: '后台首页4'
-                },
-                {
-                  icon: 'el-icon-s-order',
-                  name: '商品列表4'
-                }
-              ]
-            },
-            {
-              name: '设置',
-              subActive: '0',
-              submenu: [
-                {
-                  icon: 'el-icon-s-home',
-                  name: '后台首页'
-                },
-                {
-                  icon: 'el-icon-s-order',
-                  name: '商品列表'
-                }
-              ]
-            }
-          ]
-        }
+        navBar: [] //这个navBar还是需要保留的。不然会报错。我们只需要在created中赋值一下就可以了
       }
     },
+    created(){
+      //初始化导航栏。这里将navBar放到了common/config/config.js中了。所以需要咋created中配置一下
+      this.navBar = this.$conf.navBar;
+    },
     computed: {
-      // slideMenusActive(){
-      //   return this.navBar.list[this.navBar.active].subActive
-      // },
-      slideMenusActive: {
-        get() {
-          return this.navBar.list[this.navBar.active].subActive
-        },
-        set(val) {
-          this.navBar.list[this.navBar.active].subActive = val;
-        }
+      slideMenusActive(){
+        return this.navBar.list[this.navBar.active].subActive
       },
+      // slideMenusActive: {
+      //   get() {
+      //     return this.navBar.list[this.navBar.active].subActive
+      //   },
+      //   set(val) {
+      //     this.navBar.list[this.navBar.active].subActive = val;
+      //   }
+      // },
       slideMenus () {
+        /*
+        * 1.这个计算方法的作用是点击顶部导航栏的数据，侧边栏展示不同的数据。首先需要获取到选择的是哪个数据。使用this.navBar.active来获取。从而获取相应的submenu
+        * 2.这个数据获取到了，我们就循环便利slideMenus就可以了。因为返回值是相应的submenu子菜单
+        * */
         return this.navBar.list[this.navBar.active].submenu
       }
     },
@@ -161,7 +95,8 @@
       },
       slideSelect (key, keyPath) {
         console.log(key, keyPath)
-        this.slideMenusActive = key
+        this.navBar.list[this.navBar.active].subActive = key;
+        // this.slideMenusActive = key
       }
     }
 
