@@ -53,6 +53,50 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <!--销售情况统计 ｜ 单品销售排名-->
+    <el-row :gutter="20" class="my-3">
+      <!--销售情况统计-->
+      <el-col :span="12">
+        <el-card class="box-card">
+          <div slot="header">
+            <span>销售统计情况</span>
+            <el-button style="float: right; padding: 3px 0" type="text">按周期统计商家店铺的订单量和订单金额</el-button>
+          </div>
+
+          <div class="media align-items-center border">
+            <span class=" py-4 px-3 bg-light">昨日销量</span>
+            <div class="media-body">
+              <div class="border-bottom pl-3 py-1"><span class="mr-3">订单量(件)</span>12</div>
+              <div class="pl-3 py-1"><span class="mr-3">订单金额(元)</span>12</div>
+            </div>
+
+          </div>
+
+
+
+          <div class="media align-items-center border mt-3">
+            <span class=" py-4 px-3 bg-light">本月销量</span>
+            <div class="media-body">
+              <div class="border-bottom pl-3 py-1"><span class="mr-3" >订单量(件)</span>12</div>
+              <div class="pl-3 py-1"><span class="mr-3">订单金额(元)</span>12</div>
+            </div>
+
+          </div>
+        </el-card>
+      </el-col>
+
+
+      <!--单品销售排名-->
+      <el-col :span="12">
+        <el-card class="box-card">
+          <div slot="header">
+            <span>卡片名称</span>
+            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -107,8 +151,11 @@
     },
     methods: {
       drawLine () {
+        //可以通过$refs来获取DOM元素
         console.log(this.$refs.myChart)
+        //初始图表信息
         let myChart = echarts.init(this.$refs.myChart)
+        //设置图表数据
         myChart.setOption({
           legend: {
             data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
