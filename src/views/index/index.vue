@@ -58,28 +58,27 @@
     <el-row :gutter="20" class="my-3">
       <!--销售情况统计-->
       <el-col :span="12">
-        <el-card class="box-card">
+        <el-card class="box-card" style="height: 352px" shadow="never">
           <div slot="header">
             <span>销售统计情况</span>
             <el-button style="float: right; padding: 3px 0" type="text">按周期统计商家店铺的订单量和订单金额</el-button>
           </div>
 
-          <div class="media align-items-center border">
-            <span class=" py-4 px-3 bg-light">昨日销量</span>
+          <div class="media align-items-center border mt-3"  style="height: 100px">
+            <span class=" py-4 px-3 bg-light" style="height: 100%;display: inline-block;line-height: 50px;">昨日销量</span>
             <div class="media-body">
-              <div class="border-bottom pl-3 py-1"><span class="mr-3">订单量(件)</span>12</div>
-              <div class="pl-3 py-1"><span class="mr-3">订单金额(元)</span>12</div>
+              <div class="border-bottom pl-3 pb-2"><span class="mr-3">订单量(件)</span>12</div>
+              <div class="pl-3 pt-2"><span class="mr-3 pt-1">订单金额(元)</span>12</div>
             </div>
 
           </div>
 
 
-
-          <div class="media align-items-center border mt-3">
-            <span class=" py-4 px-3 bg-light">本月销量</span>
+          <div class="media align-items-center border mt-3"  style="height: 100px">
+            <span class=" py-4 px-3 bg-light" style="height: 100%;display: inline-block;line-height: 50px;">本月销量</span>
             <div class="media-body">
-              <div class="border-bottom pl-3 py-1"><span class="mr-3" >订单量(件)</span>12</div>
-              <div class="pl-3 py-1"><span class="mr-3">订单金额(元)</span>12</div>
+              <div class="border-bottom pl-3 pb-2"><span class="mr-3">订单量(件)</span>12</div>
+              <div class="pl-3 pt-2"><span class="mr-3">订单金额(元)</span>12</div>
             </div>
 
           </div>
@@ -89,11 +88,33 @@
 
       <!--单品销售排名-->
       <el-col :span="12">
-        <el-card class="box-card">
+        <el-card class="box-card" shadow="never">
           <div slot="header">
-            <span>卡片名称</span>
-            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+            <span>单品销售排名</span>
+            <el-button style="float: right; padding: 3px 0" type="text">按周期统计商家店铺的订单量和订单金额</el-button>
           </div>
+
+
+          <el-table
+            :data="tableData"
+            height="250"
+            border
+            style="width: 100%">
+            <el-table-column
+              type="index"
+              label="#"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="商品信息">
+            </el-table-column>
+            <el-table-column
+              prop="num"
+              label="销量"
+              width="80">
+            </el-table-column>
+          </el-table>
         </el-card>
       </el-col>
     </el-row>
@@ -107,6 +128,14 @@
     name: 'index',
     data () {
       return {
+        tableData: [
+          {name: '小天鹅滚筒洗衣机',num: '9'},
+          {name: '小天鹅滚筒洗衣机',num: '9'},
+          {name: '小天鹅滚筒洗衣机',num: '9'},
+          {name: '小天鹅滚筒洗衣机',num: '9'},
+          {name: '小天鹅滚筒洗衣机',num: '9'},
+          {name: '小天鹅滚筒洗衣机',num: '9'},
+        ],
         counts: [
           {icon: 'el-icon-user-solid ', num: '30', desc: '关注人数(个)', color: 'bg-primary'},
           {icon: 'el-icon-s-finance ', num: '120', desc: '订单总数(笔)', color: 'bg-success'},
