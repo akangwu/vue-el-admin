@@ -13,6 +13,10 @@ let routes = [
         component: 'index/index'
       },
       {
+        meta: {title: '相册管理'}, //meta用来定义数据的。title名称
+        component: 'image/index'
+      },
+      {
         meta: {title: '商品列表'}, //meta用来定义数据的。title名称
         component: 'shop/goods/list'
       }
