@@ -174,7 +174,13 @@
         console.log(this.bran)
       },
       handleSelect (key, keyPath) {
-        console.log(key, keyPath)
+        console.log(key, keyPath);
+        if(key ==='100-1') {
+          return console.log('修改资料')
+        }
+        if(key ==='100-2') {
+          return console.log('退出登陆')
+        }
         this.navBar.active = key
         // this.slideMenusActive = '0'
 
