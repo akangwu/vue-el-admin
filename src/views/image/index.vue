@@ -23,22 +23,13 @@
         <el-aside width="200px" style="position: absolute;top: 60px;left: 0;bottom: 60px;"
                   class="bg-white border-right">
           <ul class="list-group list-group-flush">
-            <li v-for="(item,index) in albums" :key="index"
-                :class="{'sum-active': albumsIndex === index}"
-                class="list-group-item list-group-item-action d-flex align-items-center"
-                style="cursor: pointer"
-                @click.stop="albumsChange(index)">
-              <span class="mr-auto">{{item.name}}</span>
-              <el-dropdown>
-                <span class="btn btn-light btn-sm border">
-                  {{item.num}} <i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.stop.native="openAlbumsModel({item,index})">修改</el-dropdown-item>
-                  <el-dropdown-item @click.stop.native="albumsDel(index)">删除</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </li>
+            <album-item
+              v-for="(item,index) in albums" :key="index" :item="item" :index="index"
+              :active="albumsIndex === index"
+              @albumsChange="albumsChange"
+              @openAlbumsModel="openAlbumsModel"
+              @albumsDel="albumsDel"
+            ></album-item>
           </ul>
         </el-aside>
         <el-container>
@@ -53,7 +44,7 @@
 
     </el-container>
 
-  <!--修改｜创建相册-->
+    <!--修改｜创建相册-->
     <el-dialog title="修改相册" :visible.sync="albumsModel">
       <el-form :model="albumsForm">
         <el-form-item label="相册名称">
@@ -72,8 +63,13 @@
 </template>
 
 <script>
+  import albumItem from '../../components/image/albums-item'
+
   export default {
     name: 'index',
+    components: {
+      albumItem
+    },
     data () {
       return {
         searchForm: {
@@ -109,38 +105,38 @@
         this.albumsIndex = index
       },
       //相册删除事件
-      albumsDel(index) {
+      albumsDel (index) {
         console.log('aa')
         this.$confirm('是否删除该相册', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.albums.splice(index,1);
+          this.albums.splice(index, 1)
           this.$message({
             type: 'success',
             message: '删除成功!'
-          });
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消'
-          });
-        });
+          })
+        })
       },
 
-    // 打开相册修改/创建框
-      openAlbumsModel(obj) {
+      // 打开相册修改/创建框
+      openAlbumsModel (obj) {
         console.log(obj)
-        if(obj) {
-          let {item,index} = obj; //es6结构赋值
-          this.albumsForm.name=item.name;
-          this.albumsForm.order=item.order;
-          this.albumsEditIndex = index;
-        //  打开模态框
-          return this.albumsModel = true;
+        if (obj) {
+          let {item, index} = obj //es6结构赋值
+          this.albumsForm.name = item.name
+          this.albumsForm.order = item.order
+          this.albumsEditIndex = index
+          //  打开模态框
+          return this.albumsModel = true
         }
-        // this.albumsModel = true;
+          // this.albumsModel = true;
 
         // //  创建相册
         else {
@@ -148,19 +144,19 @@
             name: '',
             order: 0
           }
-          this.albumsEditIndex = -1;
+          this.albumsEditIndex = -1
         }
-        this.albumsModel = true;
+        this.albumsModel = true
       },
       //点击确定，修改或者创建相册。如何判断是修改还是创建相册呢？我们这里新增了一个字段，albumsEditIndex=-1，表示修改相册，如果=0，表示创建相册
-      confirmAlbumsModel() {
+      confirmAlbumsModel () {
         //>-1表示是修改相册
-        if(this.albumsEditIndex > -1) {
-          this.albumsEdit();
+        if (this.albumsEditIndex > -1) {
+          this.albumsEdit()
           // return this.albumsModel = false;
         }
-        // this.albumsModel = false;
-      //  增加新的相册，就需要追加albums
+          // this.albumsModel = false;
+        //  增加新的相册，就需要追加albums
         else {
           this.albums.unshift({
             name: this.albumsForm.name,
@@ -168,21 +164,17 @@
             num: 0
           })
         }
-        this.albumsModel = false;
+        this.albumsModel = false
       },
       //修改相册
-      albumsEdit() {
-        this.albums[this.albumsEditIndex].name=this.albumsForm.name;
-        this.albums[this.albumsEditIndex].order=this.albumsForm.order;
+      albumsEdit () {
+        this.albums[this.albumsEditIndex].name = this.albumsForm.name
+        this.albums[this.albumsEditIndex].order = this.albumsForm.order
       }
     }
   }
 </script>
 
 <style scoped>
-  .sum-active {
-    color: #67C23A !important;
-    background-color: #F0F9eb!important;
-    border-color: #C2E7B0!important;
-  }
+
 </style>
