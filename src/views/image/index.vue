@@ -15,7 +15,7 @@
         </div>
         <div>
           <el-button type="success" size="mini" @click="openAlbumsModel(false)">创建相册</el-button>
-          <el-button type="warning" size="mini">上传图片</el-button>
+          <el-button type="warning" size="mini" @click="uploadModel= true">上传图片</el-button>
         </div>
       </el-header>
       <el-container>
@@ -44,8 +44,8 @@
 
     </el-container>
 
-    <!--修改｜创建相册-->
-    <el-dialog title="修改相册" :visible.sync="albumsModel">
+    <!--修改｜创建相册 模态框-->
+    <el-dialog :title="albumsModelTitle" :visible.sync="albumsModel">
       <el-form :model="albumsForm">
         <el-form-item label="相册名称">
           <el-input v-model="albumsForm.name" size="medium" placeholder="请输入相册名称"></el-input>
@@ -59,6 +59,23 @@
         <el-button type="primary" @click="confirmAlbumsModel">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--上传图片模态框-->
+    <div class="text-center">
+      <el-dialog title="上传图片" :visible.sync="uploadModel">
+        <!--upload上传-->
+        <el-upload
+          class="upload-demo"
+          drag
+          action="https://jsonplaceholder.typicode.com/posts/"
+          multiple>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+      </el-dialog>
+
+    </div>
   </div>
 </template>
 
@@ -79,6 +96,7 @@
         albumsIndex: '',
         albums: [],
         albumsModel: false,
+        uploadModel: false,
         albumsForm: {
           name: '',
           order: 0
@@ -89,6 +107,11 @@
     created () {
       //  初始化数据
       this.__init()
+    },
+    computed: {
+      albumsModelTitle () {
+        return this.albumsEditIndex > -1 ? '修改相册' : '创建相册'
+      }
     },
     methods: {
       __init () {
