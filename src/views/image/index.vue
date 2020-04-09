@@ -46,7 +46,7 @@
                     </div>
                     <div class="p-2 text-center">
                       <el-button-group>
-                        <el-button icon="el-icon-view" size="mini"></el-button>
+                        <el-button icon="el-icon-view" size="mini" @click="previewImage"></el-button>
                         <el-button icon="el-icon-edit" size="mini"></el-button>
                         <el-button icon="el-icon-delete" size="mini"></el-button>
                       </el-button-group>
@@ -96,6 +96,13 @@
       </el-dialog>
 
     </div>
+
+  <!--预览图片模态框-->
+    <el-dialog :visible.sync="previewModel" width="60vh" >
+      <div style="margin: -60px -20px -30px -20px;">
+        <img src="../../assets/1.jpg" style="width:100%; ">
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -121,7 +128,8 @@
           name: '',
           order: 0
         },
-        albumsEditIndex: -1
+        albumsEditIndex: -1,
+        previewModel: false,
       }
     },
     created () {
@@ -213,6 +221,10 @@
       albumsEdit () {
         this.albums[this.albumsEditIndex].name = this.albumsForm.name
         this.albums[this.albumsEditIndex].order = this.albumsForm.order
+      },
+      //图片预览
+      previewImage() {
+        this.previewModel = !this.previewModel;
       }
     }
   }
