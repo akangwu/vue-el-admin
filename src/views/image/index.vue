@@ -97,7 +97,28 @@
           </el-main>
         </el-container>
       </el-container>
-      <el-footer>Footer</el-footer>
+
+      <el-footer class="border-top d-flex align-items-center px-0">
+        <div style="width: 200px; flex-shrink: 0;"
+             class="h-100 border-right d-flex align-items-center justify-content-center">
+            <el-button-group class="d-flex">
+              <el-button class="mr-3" icon="el-icon-arrow-left" size="mini">上一页</el-button>
+              <el-button size="mini">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+            </el-button-group>
+        </div>
+        <div style="flex:1;" class="ml-5">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[100, 200, 300, 400]"
+            :page-size="100"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="400">
+          </el-pagination>
+        </div>
+
+      </el-footer>
     </el-container>
 
     <!--修改｜创建相册 模态框-->
@@ -172,6 +193,7 @@
         previewUrl: '',
         imageList: [],
         chooseList: [], //选中的数组
+        currentPage: 1,
       }
     },
     created () {
@@ -375,6 +397,12 @@
             })
             return
           })
+      },
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
       }
     }
   }
