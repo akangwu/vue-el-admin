@@ -71,7 +71,7 @@
                     <div class="border"
                          :class="{'border-danger': item.isCheck}">
                       <span v-if= "item.isCheck" class="badge badge-danger" style="position: absolute;
-                      top: 0;right: 0;">1
+                      top: 0;right: 0;">{{item.checkOrder}}
                       </span>
                       <img :src="item.url" class="w-100" style="height:100px;" alt @click="choose(item)"/>
                       <div
@@ -168,26 +168,8 @@ export default {
       albumsEditIndex: -1,
       previewModel: false,
       previewUrl: "",
-      imageList: [
-        {
-          url:
-            "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
-          name: "图片",
-          isCheck: false
-        },
-        {
-          url:
-            "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
-          name: "图片",
-          isCheck: false
-        },
-        {
-          url:
-            "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
-          name: "图片",
-          isCheck: false
-        }
-      ]
+      imageList: [],
+      chooseList: [], //选中的数组
     };
   },
   created() {
@@ -202,7 +184,17 @@ export default {
   methods: {
     //选择图片
     choose(item) {
-      item.isCheck = !item.isCheck;
+      // 选中
+      if(!item.isCheck) {
+        this.chooseList.push({id: item.id, url: item.url});
+        console.log(this.chooseList.length)
+        //  计算选中的数量
+        item.checkOrder = this.chooseList.length;
+        item.isCheck = !item.isCheck;
+        return;
+      }
+    //  未选中
+
     },
     __init() {
       for (let i = 0; i < 20; i++) {
@@ -211,6 +203,16 @@ export default {
           num: Math.floor(Math.random() * 100),
           order: 0
         });
+      }
+      for (let i = 0; i < 30; i++) {
+        this.imageList.push({
+          id: i,
+          url:
+            "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
+          name: "图片",
+          isCheck: false,
+          checkOrder: 0
+        })
       }
     },
     // 点击不同相册激活时的状态
