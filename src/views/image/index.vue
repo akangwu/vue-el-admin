@@ -25,6 +25,7 @@
           <el-button type="primary" size="mini">搜索</el-button>
         </div>
         <div>
+          <el-button v-if="chooseList.length" type="danger" size="mini" @click="imageDelAll()">删除相册</el-button>
           <el-button type="success" size="mini" @click="openAlbumsModel(false)">创建相册</el-button>
           <el-button type="warning" size="mini" @click="uploadModel= true">上传图片</el-button>
         </div>
@@ -182,6 +183,17 @@ export default {
     }
   },
   methods: {
+    //删除全部相册
+    imageDelAll() {
+      let list = this.imageList.filter((img)=>{
+        return !this.chooseList.some(c=>{
+          return c.id === img.id
+        })
+      })
+      console.log(list)
+      this.imageList = list;
+      list = [];
+    },
     //选择图片
     choose(item) {
       // 选中
@@ -229,7 +241,7 @@ export default {
           id: i,
           url:
             "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
-          name: "图片",
+          name: "图片" + i,
           isCheck: false,
           checkOrder: 0
         })
