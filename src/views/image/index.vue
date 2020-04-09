@@ -68,19 +68,25 @@
                     shadow="hover"
                     style="position:relative;cursor:pointer;"
                   >
-                    <img :src="item.url" class="w-100" style="height:100px;" alt />
-                    <div
-                      class="w-100 text-white text-center"
-                      style="background: rgba(0,0,0,0.3);position:absolute; margin-top: -25px;"
-                    >
-                      <span class="small">{{item.name}}</span>
-                    </div>
-                    <div class="p-2 text-center">
-                      <el-button-group>
-                        <el-button icon="el-icon-view" size="mini" @click="previewImage(item)"></el-button>
-                        <el-button icon="el-icon-edit" size="mini" @click="imageEdit(item,index)"></el-button>
-                        <el-button icon="el-icon-delete" size="mini" @click="imageDel(index)"></el-button>
-                      </el-button-group>
+                    <div class="border"
+                         :class="{'border-danger': item.isCheck}">
+                      <span v-if= "item.isCheck" class="badge badge-danger" style="position: absolute;
+                      top: 0;right: 0;">1
+                      </span>
+                      <img :src="item.url" class="w-100" style="height:100px;" alt @click="choose(item)"/>
+                      <div
+                        class="w-100 text-white text-center"
+                        style="background: rgba(0,0,0,0.3);position:absolute; margin-top: -25px;"
+                      >
+                        <span class="small">{{item.name}}</span>
+                      </div>
+                      <div class="p-2 text-center">
+                        <el-button-group>
+                          <el-button icon="el-icon-view" size="mini" @click="previewImage(item)"></el-button>
+                          <el-button icon="el-icon-edit" size="mini" @click="imageEdit(item,index)"></el-button>
+                          <el-button icon="el-icon-delete" size="mini" @click="imageDel(index)"></el-button>
+                        </el-button-group>
+                      </div>
                     </div>
                   </el-card>
                 </el-col>
@@ -166,17 +172,20 @@ export default {
         {
           url:
             "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
-          name: "图片"
+          name: "图片",
+          isCheck: false
         },
         {
           url:
             "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
-          name: "图片"
+          name: "图片",
+          isCheck: false
         },
         {
           url:
             "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
-          name: "图片"
+          name: "图片",
+          isCheck: false
         }
       ]
     };
@@ -191,6 +200,10 @@ export default {
     }
   },
   methods: {
+    //选择图片
+    choose(item) {
+      item.isCheck = !item.isCheck;
+    },
     __init() {
       for (let i = 0; i < 20; i++) {
         this.albums.push({
@@ -298,26 +311,28 @@ export default {
       });
     },
     // 删除当前图片
-    imageDel (index) {
-      this.$confirm('是否删除该图片','提示',{
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(()=>{
-      this.imageList.splice(index,1);
-      this.$message({
-        message: '删除成功',
-        type: 'success'
+    imageDel(index) {
+      this.$confirm("是否删除该图片", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
-      }).catch(()=>{
-        this.$message({
-        message: '取消删除',
-        type: 'fail'
-      })
-        return;
-      })
-    }    
+        .then(() => {
+          this.imageList.splice(index, 1);
+          this.$message({
+            message: "删除成功",
+            type: "success"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            message: "取消删除",
+            type: "fail"
+          });
+          return;
+        });
     }
+  }
 };
 </script>
 
