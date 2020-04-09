@@ -27,6 +27,7 @@
         <div>
           <!--<el-button v-if="chooseList.length" type="danger" size="mini" @click="imageDelAll">删除图片</el-button>-->
           <el-button v-if="chooseList.length" type="danger" size="mini" @click="imageDel({all:true})">删除图片</el-button>
+          <el-button v-if="chooseList.length" type="danger" size="mini" @click="unChoose">取消选中</el-button>
           <el-button type="success" size="mini" @click="openAlbumsModel(false)">创建相册</el-button>
           <el-button type="warning" size="mini" @click="uploadModel= true">上传图片</el-button>
         </div>
@@ -206,6 +207,22 @@
       }
     },
     methods: {
+      //取消选中
+      unChoose() {
+      //  1.找到所有选中的图片
+        this.imageList.forEach((img)=>{
+          let i = this.chooseList.findIndex(item=>{
+            return item.id ===img.id
+          })
+          if(i>-1) {
+            //  2.取消选中样式，选中排序归零
+            img.isCheck = false;
+            img.checkOrder = 0;
+            //  3.从chooseList中移除选中
+            this.chooseList.splice(i,1)
+          }
+        })
+      },
       //删除全部相册,这里和删除单个相册做了同样的事情,都有确认窗,所以合并到了一起做了优化
       // imageDelAll() {
       //   let list = this.imageList.filter((img)=>{
