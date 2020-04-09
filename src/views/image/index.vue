@@ -35,7 +35,27 @@
         <el-container>
           <!--内容-->
           <el-main style="position: absolute;top: 60px;right: 0;left: 200px;bottom: 60px;">
-            <div style="height:1000px"></div>
+            <div style="height:1000px">
+              <el-row :gutter="10">
+                <el-col :span="24" :lg="4" :md="6" :sm="8" v-for="i in 10" :key="i">
+                  <el-card class="box-card mb-3" :body-style="{'padding' : '0'}"
+                           shadow="hover" style="position:relative;cursor:pointer;">
+                    <img src="../../assets/1.jpg" class="w-100" style="height:100px;">
+                    <div class="w-100 text-white"
+                         style="background: rgba(0,0,0,0.3);position:absolute; margin-top: -25px;">123
+                    </div>
+                    <div class="p-2 text-center">
+                      <el-button-group>
+                        <el-button icon="el-icon-view" size="mini"></el-button>
+                        <el-button icon="el-icon-edit" size="mini"></el-button>
+                        <el-button icon="el-icon-delete" size="mini"></el-button>
+                      </el-button-group>
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
+
+            </div>
 
           </el-main>
         </el-container>
