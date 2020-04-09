@@ -4,13 +4,24 @@
       <!--头部,先看看有没有flex布局-->
       <el-header class="d-flex align-items-center">
         <div class="d-flex mr-auto">
-          <el-select v-model="searchForm.order" clearable placeholder="请选择图片排序方式" style="width: 150px" class="mr-2"
-                     size="mini">
+          <el-select
+            v-model="searchForm.order"
+            clearable
+            placeholder="请选择图片排序方式"
+            style="width: 150px"
+            class="mr-2"
+            size="mini"
+          >
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
-          <el-input v-model="searchForm.keyword" style="width:150px" class="mr-2" size="mini"
-                    placeholder="输入相册名称"></el-input>
+          <el-input
+            v-model="searchForm.keyword"
+            style="width:150px"
+            class="mr-2"
+            size="mini"
+            placeholder="输入相册名称"
+          ></el-input>
           <el-button type="primary" size="mini">搜索</el-button>
         </div>
         <div>
@@ -20,11 +31,17 @@
       </el-header>
       <el-container>
         <!--侧边-->
-        <el-aside width="200px" style="position: absolute;top: 60px;left: 0;bottom: 60px;"
-                  class="bg-white border-right">
+        <el-aside
+          width="200px"
+          style="position: absolute;top: 60px;left: 0;bottom: 60px;"
+          class="bg-white border-right"
+        >
           <ul class="list-group list-group-flush">
             <album-item
-              v-for="(item,index) in albums" :key="index" :item="item" :index="index"
+              v-for="(item,index) in albums"
+              :key="index"
+              :item="item"
+              :index="index"
               :active="albumsIndex === index"
               @albumsChange="albumsChange"
               @openAlbumsModel="openAlbumsModel"
@@ -35,33 +52,44 @@
         <el-container>
           <!--内容-->
           <el-main style="position: absolute;top: 60px;right: 0;left: 200px;bottom: 60px;">
-            <div style="height:1000px">
+            <div>
               <el-row :gutter="10">
-                <el-col :span="24" :lg="4" :md="6" :sm="8" v-for="i in 10" :key="i">
-                  <el-card class="box-card mb-3" :body-style="{'padding' : '0'}"
-                           shadow="hover" style="position:relative;cursor:pointer;">
-                    <img src="../../assets/1.jpg" class="w-100" style="height:100px;">
-                    <div class="w-100 text-white"
-                         style="background: rgba(0,0,0,0.3);position:absolute; margin-top: -25px;">123
+                <el-col
+                  :span="24"
+                  :lg="4"
+                  :md="6"
+                  :sm="8"
+                  v-for="(item,index) in imageList"
+                  :key="index"
+                >
+                  <el-card
+                    class="box-card mb-3"
+                    :body-style="{'padding' : '0'}"
+                    shadow="hover"
+                    style="position:relative;cursor:pointer;"
+                  >
+                    <img :src="item.url" class="w-100" style="height:100px;" alt />
+                    <div
+                      class="w-100 text-white text-center"
+                      style="background: rgba(0,0,0,0.3);position:absolute; margin-top: -25px;"
+                    >
+                      <span class="small">{{item.name}}</span>
                     </div>
                     <div class="p-2 text-center">
                       <el-button-group>
-                        <el-button icon="el-icon-view" size="mini" @click="previewImage"></el-button>
-                        <el-button icon="el-icon-edit" size="mini"></el-button>
-                        <el-button icon="el-icon-delete" size="mini"></el-button>
+                        <el-button icon="el-icon-view" size="mini" @click="previewImage(item)"></el-button>
+                        <el-button icon="el-icon-edit" size="mini" @click="imageEdit(item,index)"></el-button>
+                        <el-button icon="el-icon-delete" size="mini" @click="imageDel(index)"></el-button>
                       </el-button-group>
                     </div>
                   </el-card>
                 </el-col>
               </el-row>
-
             </div>
-
           </el-main>
         </el-container>
       </el-container>
       <el-footer>Footer</el-footer>
-
     </el-container>
 
     <!--修改｜创建相册 模态框-->
@@ -88,148 +116,210 @@
           class="upload-demo"
           drag
           action="https://jsonplaceholder.typicode.com/posts/"
-          multiple>
+          multiple
+        >
           <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
           <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
       </el-dialog>
-
     </div>
 
-  <!--预览图片模态框-->
-    <el-dialog :visible.sync="previewModel" width="60vh" >
+    <!--预览图片模态框-->
+    <el-dialog :visible.sync="previewModel" width="60vh">
       <div style="margin: -60px -20px -30px -20px;">
-        <img src="../../assets/1.jpg" style="width:100%; ">
+        <img :src="previewUrl" style="width:100%;" alt />
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import albumItem from '../../components/image/albums-item'
+import albumItem from "../../components/image/albums-item";
 
-  export default {
-    name: 'index',
-    components: {
-      albumItem
-    },
-    data () {
-      return {
-        searchForm: {
-          order: '',
-          keyword: ''
+export default {
+  name: "index",
+  components: {
+    albumItem
+  },
+  data() {
+    return {
+      searchForm: {
+        order: "",
+        keyword: ""
+      },
+      albumsIndex: "",
+      albums: [],
+      albumsModel: false,
+      uploadModel: false,
+      albumsForm: {
+        name: "",
+        order: 0
+      },
+      albumsEditIndex: -1,
+      previewModel: false,
+      previewUrl: "",
+      imageList: [
+        {
+          url:
+            "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
+          name: "图片"
         },
-        albumsIndex: '',
-        albums: [],
-        albumsModel: false,
-        uploadModel: false,
-        albumsForm: {
-          name: '',
-          order: 0
+        {
+          url:
+            "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
+          name: "图片"
         },
-        albumsEditIndex: -1,
-        previewModel: false,
-      }
-    },
-    created () {
-      //  初始化数据
-      this.__init()
-    },
-    computed: {
-      albumsModelTitle () {
-        return this.albumsEditIndex > -1 ? '修改相册' : '创建相册'
-      }
-    },
-    methods: {
-      __init () {
-        for (let i = 0; i < 20; i++) {
-          this.albums.push({
-            name: '相册' + i,
-            num: Math.floor(Math.random() * 100),
-            order: 0
-          })
+        {
+          url:
+            "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1587023858&t=20e0c7e7ab6feb70cb3be1b1dca03989",
+          name: "图片"
         }
-      },
-      // 点击不同相册激活时的状态
-      albumsChange (index) {
-        this.albumsIndex = index
-      },
-      //相册删除事件
-      albumsDel (index) {
-        console.log('aa')
-        this.$confirm('是否删除该相册', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.albums.splice(index, 1)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          })
-        })
-      },
-
-      // 打开相册修改/创建框
-      openAlbumsModel (obj) {
-        console.log(obj)
-        if (obj) {
-          let {item, index} = obj //es6结构赋值
-          this.albumsForm.name = item.name
-          this.albumsForm.order = item.order
-          this.albumsEditIndex = index
-          //  打开模态框
-          return this.albumsModel = true
-        }
-          // this.albumsModel = true;
-
-        // //  创建相册
-        else {
-          this.albumsForm = {
-            name: '',
-            order: 0
-          }
-          this.albumsEditIndex = -1
-        }
-        this.albumsModel = true
-      },
-      //点击确定，修改或者创建相册。如何判断是修改还是创建相册呢？我们这里新增了一个字段，albumsEditIndex=-1，表示修改相册，如果=0，表示创建相册
-      confirmAlbumsModel () {
-        //>-1表示是修改相册
-        if (this.albumsEditIndex > -1) {
-          this.albumsEdit()
-          // return this.albumsModel = false;
-        }
-          // this.albumsModel = false;
-        //  增加新的相册，就需要追加albums
-        else {
-          this.albums.unshift({
-            name: this.albumsForm.name,
-            order: this.albumsForm.order,
-            num: 0
-          })
-        }
-        this.albumsModel = false
-      },
-      //修改相册
-      albumsEdit () {
-        this.albums[this.albumsEditIndex].name = this.albumsForm.name
-        this.albums[this.albumsEditIndex].order = this.albumsForm.order
-      },
-      //图片预览
-      previewImage() {
-        this.previewModel = !this.previewModel;
-      }
+      ]
+    };
+  },
+  created() {
+    //  初始化数据
+    this.__init();
+  },
+  computed: {
+    albumsModelTitle() {
+      return this.albumsEditIndex > -1 ? "修改相册" : "创建相册";
     }
-  }
+  },
+  methods: {
+    __init() {
+      for (let i = 0; i < 20; i++) {
+        this.albums.push({
+          name: "相册" + i,
+          num: Math.floor(Math.random() * 100),
+          order: 0
+        });
+      }
+    },
+    // 点击不同相册激活时的状态
+    albumsChange(index) {
+      this.albumsIndex = index;
+    },
+    //相册删除事件
+    albumsDel(index) {
+      console.log("aa");
+      this.$confirm("是否删除该相册", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.albums.splice(index, 1);
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    },
+
+    // 打开相册修改/创建框
+    openAlbumsModel(obj) {
+      console.log(obj);
+      if (obj) {
+        let { item, index } = obj; //es6结构赋值
+        this.albumsForm.name = item.name;
+        this.albumsForm.order = item.order;
+        this.albumsEditIndex = index;
+        //  打开模态框
+        return (this.albumsModel = true);
+      }
+      // this.albumsModel = true;
+
+      // //  创建相册
+      else {
+        this.albumsForm = {
+          name: "",
+          order: 0
+        };
+        this.albumsEditIndex = -1;
+      }
+      this.albumsModel = true;
+    },
+    //点击确定，修改或者创建相册。如何判断是修改还是创建相册呢？我们这里新增了一个字段，albumsEditIndex=-1，表示修改相册，如果=0，表示创建相册
+    confirmAlbumsModel() {
+      //>-1表示是修改相册
+      if (this.albumsEditIndex > -1) {
+        this.albumsEdit();
+        // return this.albumsModel = false;
+      }
+      // this.albumsModel = false;
+      //  增加新的相册，就需要追加albums
+      else {
+        this.albums.unshift({
+          name: this.albumsForm.name,
+          order: this.albumsForm.order,
+          num: 0
+        });
+      }
+      this.albumsModel = false;
+    },
+    //修改相册
+    albumsEdit() {
+      this.albums[this.albumsEditIndex].name = this.albumsForm.name;
+      this.albums[this.albumsEditIndex].order = this.albumsForm.order;
+    },
+    //图片预览
+    previewImage(item) {
+      this.previewUrl = item.url;
+      this.previewModel = !this.previewModel;
+    },
+    // 修改图片名称
+    imageEdit(item, index) {
+      this.$prompt("请输入新名称", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputValue: item.name,
+        inputValidator(val) {
+          if (val === "") {
+            return "图片名称不能为空";
+          }
+        }
+      }).then(({ value }) => {
+        (item.name = value),
+          this.$message({
+            message: "修改成功",
+            type: "success"
+          });
+      });
+    },
+    // 删除当前图片
+    imageDel (index) {
+      this.$confirm('是否删除该图片','提示',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(()=>{
+      this.imageList.splice(index,1);
+      this.$message({
+        message: '删除成功',
+        type: 'success'
+      })
+      }).catch(()=>{
+        this.$message({
+        message: '取消删除',
+        type: 'fail'
+      })
+        return;
+      })
+    }    
+    }
+};
 </script>
 
 <style scoped>
-
 </style>
