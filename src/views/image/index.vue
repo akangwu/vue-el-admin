@@ -193,8 +193,28 @@ export default {
         item.isCheck = !item.isCheck;
         return;
       }
-    //  未选中
-
+    //  取消选中
+    //  找到在chooseList中的索引,删除
+      let i = this.chooseList.findIndex(v=>v.id ===item.id)
+      if(i === -1) {
+        return;
+      }else {
+        let length = this.chooseList.length;
+        //取消选中中间的
+        if(i+1<length) {
+          for (let j = i; j < length ; j++) {
+            let no = this.imageList.findIndex(v=>v.id === this.chooseList[j].id)
+            if (no >-1) {
+              this.imageList[no].checkOrder --;
+            }
+          }
+        }
+        this.chooseList.splice(i,1)
+      }
+    //  修改状态
+      item.isCheck = false;
+    //  重置序号
+      item.checkOrder = 0;
     },
     __init() {
       for (let i = 0; i < 20; i++) {
